@@ -13,7 +13,7 @@ unauthorized access attempts.
 SigninLogs
 | where TimeGenerated > ago(24h)
 | where ResultType != 0
-| summarize FailedAttempts = count() by UserPrincipalName
+| summarize FailedAttempts = count() by UserPrincipalName, IPAddress
 | where FailedAttempts >= 5
 ```
 
