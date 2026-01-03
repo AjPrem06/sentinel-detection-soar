@@ -23,15 +23,22 @@ SigninLogs
 
 ## Expected Output
 - UserPrincipalName
+- IPAddress
 - FailedAttempts
 
 ## Tuning / False Positives
-- Users who mistype passwords
-- New users unfamiliar with credentials
-- Service accounts (should be excluded in production)
+- Users repeatedly mistyping passwords
+- Sign-ins from corporate VPN IPs
+- Service or automation accounts
+
+Tuning ideas:
+- Exclude known trusted IP ranges
+- Increase threshold for privileged accounts
 
 ## Response Recommendations
-- Review sign-in details and source IPs
-- Confirm with user if activity is expected
-- Reset credentials if suspicious behavior is confirmed
+- Review sign-in failures by IP address
+- Check if IP is known or suspicious
+- Validate user activity
+- Reset credentials if malicious behavior is confirmed
+
 
