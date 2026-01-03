@@ -10,11 +10,19 @@ unauthorized access attempts.
 
 ## Query
 ```kql
+let timeframe = 24h;
+let failureThreshold = 5;
+let trustedIPs = dynamic([
+    "10.0.0.1",
+    "10.0.0.2"
+]);
+
 SigninLogs
-| where TimeGenerated > ago(24h)
+| where TimeGenerated > ago(timeframe)
 | where ResultType != 0
+| where IPAddress !in (trustedIPs)
 | summarize FailedAttempts = count() by UserPrincipalName, IPAddress
-| where FailedAttempts >= 5
+| where FailedAttempts >= failureThreshold
 ```
 
 ## MITRE ATT&CK Mapping
@@ -31,14 +39,15 @@ SigninLogs
 - Sign-ins from corporate VPN IPs
 - Service or automation accounts
 
-Tuning ideas:
-- Exclude known trusted IP ranges
-- Increase threshold for privileged accounts
+## Tuning / False Positives
+- Users mistyping passwords
+- Sign-ins from trusted corporate or VPN IP addresses
+- Automated service accounts
 
-## Response Recommendations
-- Review sign-in failures by IP address
-- Check if IP is known or suspicious
-- Validate user activity
-- Reset credentials if malicious behavior is confirmed
+Tuning ideas:
+- Maintain a trusted IP allow-list
+- Adjust failure threshold based on environment size
+- Exclude known service accounts
+
 
 
